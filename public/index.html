@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>socketio</title>
+	<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		var socket = io.connect('/guest');
+		socket.on('connect', function(){
+
+			socket.emit('set', 'name', 'Axel');
+
+		});
+		var admin = io.connect('/admin');
+		admin.on('connect', function(){
+			admin.emit('set', 'username', 'dolcea')
+		})
+	</script>
+</body>
+</html>
