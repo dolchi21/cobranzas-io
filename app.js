@@ -7,7 +7,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/counters', function counters(req, res){
 
-	var io = global.io;
+	var io = require('./io');
 	
 	res.json({
 		admin : countSockets(io.of('/admin')),
@@ -24,7 +24,7 @@ app.get('/counters', function counters(req, res){
 
 app.get('/who/:socket_id?', function(req, res){
 
-	var io = global.io;
+	var io = require('./io');
 	
 	var id = req.params.socket_id;
 
