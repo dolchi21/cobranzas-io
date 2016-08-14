@@ -4,6 +4,10 @@ var app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(function CORS(req, res, next){
+	res.header('Access-Control-Allow-Origin', '*');
+	next();
+});
 
 app.get('/counters', function counters(req, res){
 
@@ -22,15 +26,18 @@ app.get('/counters', function counters(req, res){
 
 });
 
-app.get('/who/:socket_id?', function(req, res){
+var clientsStore = require('./lib/ClientsStore');
 
-	var io = require('./io');
+app.get('/who', function(req, res){
+
+	res.json( clientsStore.get() );
+
+});
+app.get('/who/:socket_id?', function(req, res){
 	
 	var id = req.params.socket_id;
 
-	var json = (id) ? io.clients[id] : io.clients;
-
-	res.json(json)
+	res.json( clientsStore.get(id) );
 
 });
 
