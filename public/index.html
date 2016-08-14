@@ -1,21 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>socketio</title>
+	<title id="html_title">socketio</title>
 	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="//www.cobranzas.com/js/system.js"></script>
+	<script type="text/javascript">
+		SystemJS.config({
+			map : {
+				events : '/js/EventEmitter-4.2.11.min.js',
+				store : '/js/store.min.js',
+				util : '/js/util.js'
+			}
+		})
+	</script>
 </head>
 <body>
 	<script type="text/javascript">
-		var socket = io.connect('/guest');
-		socket.on('connect', function(){
+		console.info('Loading', 'store');
+		System.import('store').then(function(store){
+			console.info('Loading', 'store', 'success');
+			
+			window.store = store;
 
-			socket.emit('set', 'name', 'Axel');
+		}).then(function(){
+
+			SystemJS.import('/cobranzas-io.js').then(function(CobranzasIO){
+
+				CobranzasIO.connect('/admin', {
+					authentication : {
+						token : 'axel.dolce'
+					}
+				}).then(function(cio){
+					var name = 'dolcea'
+					cio.set('who', { username : name });
+					cio.set('path', window.location.pathname);
+					
+					cio.on('disconnect', function(){
+						console.warn('cio.disconnect')
+					});
+
+				});
+
+				CobranzasIO.connect('/guest').then(function(cio){
+					cio.set('role', 'guest');
+				}).catch(function(){});
+
+			});
 
 		});
-		var admin = io.connect('/admin');
-		admin.on('connect', function(){
-			admin.emit('set', 'username', 'dolcea')
-		})
+
+		function relevantWindowData(){
+			return {
+				location : window.location,
+				screen : {
+					width : window.screen.width,
+					height : window.screen.height,
+				},
+				navigator : {
+					language : window.navigator.language,
+					userAgent : window.navigator.userAgent,
+					platform : window.navigator.platform
+				},
+				timestamp : performance.now()
+			}
+		}
+
 	</script>
 </body>
 </html>
