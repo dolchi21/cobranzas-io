@@ -49,7 +49,6 @@ admin.on('connection', function auth(socket){
 function storeBasics(socket){
 
 	var id = socket.id;
-	console.log(socket)
 	
 	clientsStore.set(id, {});
 

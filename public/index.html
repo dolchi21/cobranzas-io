@@ -42,8 +42,10 @@
 				});
 
 				CobranzasIO.connect('/guest').then(function(cio){
+					
 					cio.set('role', 'guest');
-				}).catch(function(){});
+					
+				});
 
 			});
 
